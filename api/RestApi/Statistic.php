@@ -985,6 +985,123 @@ class Statistic {
         return $this->doStatisticUserAgent($timestamp, $param);
     }
 
+    /* api/statictic/component */
+    public function doStatisticComponent($timestamp, $param){
+
+    	/* auth */
+        if(count(($adata = $this->getLoggedIn()))) return $adata;
+
+        /* get our DB */
+        $db = $this->getContainer('db');
+        $db->select_db(DB_STATISTIC);
+        $db->dbconnect();
+        /* get our DB Abstract Layer */
+        $layer = $this->getContainer('layer');
+
+        $data = array();
+
+        $search = array();
+        $callwhere = array();
+        $calldata = array();
+        $arrwhere = "";
+
+        foreach($param['filter'] as $key=>$filter) {
+
+            $search[$key]['ip_address'] = getVar('ip_address', NULL, $filter, 'string');
+            $callwhere = generateWhere($search[$key], 1, $db, 0);
+            if( count($callwhere) ) $calldata[] = "(". implode(" AND ", $callwhere). ")";
+        }
+
+        if(count($calldata)) $arrwhere = " AND (". implode(" OR ", $calldata). ")";
+
+        $time['from'] = getVar('from', round((microtime(true) - 300) * 1000), $timestamp, 'long');
+        $time['to'] = getVar('to', round(microtime(true) * 1000), $timestamp, 'long');
+        $time['from_ts'] = intval($time['from']/1000);
+        $time['to_ts'] = intval($time['to']/1000);
+
+        $and_or = getVar('orand', NULL, $param['filter'], 'string');
+        $limit = getVar('limit', 500, $param, 'int');
+        $total = getVar('total', false, $param, 'bool');
+
+        $layerHelper = array();
+        $layerHelper['table'] = array();
+        $layerHelper['order'] = array();
+        $layerHelper['where'] = array();
+        $layerHelper['fields'] = array();
+        $layerHelper['values'] = array();
+        $layerHelper['table']['base'] = "stats_traffic";
+        $layerHelper['where']['type'] = $and_or ? "OR" : "AND";
+        $layerHelper['where']['param'] = $calldata;
+        $layerHelper['time'] = $time;
+
+        $layerHelper['fields']['ts'] = array();
+        $layerHelper['fields']['ts'][0] = array();
+        $layerHelper['fields']['ts'][0]['name'] = 'from_date';
+        $layerHelper['fields']['ts'][0]['alias'] = 'from_ts';
+        $layerHelper['fields']['ts'][1]=array();
+        $layerHelper['fields']['ts'][1]['name'] = 'to_date';
+        $layerHelper['fields']['ts'][1]['alias'] = 'to_ts';
+
+        $layerHelper['fields']['time'] = "to_date";
+        $layerHelper['order']['by'] = "id";
+        $layerHelper['order']['type'] = "DESC";
+        syslog(LOG_WARNING, "layerHelper: " . print_r( $layerHelper, true ) );
+        syslog(LOG_WARNING, "calldata: " . print_r( $calldata, true ) );
+
+		if($total)
+		{
+			$layerHelper['values'][] = "id, SUM(total) as cnt, ( SUM( IF(type='invite',0,total) ) / sum(total) ) * 100 as total, type";
+			$layerHelper['group']['by'] = "id,from_ts,to_ts,type";
+		}
+		else
+		{
+            $layerHelper['values'][] = "id, ip_address,
+if(  ( sum(IF(type='connect',total,0)) / sum(IF(type='invite',total,0))  ) * 100 < 0, 0,
+  if(  ( sum(IF(type='connect',total,0)) / sum(IF(type='invite',total,0))   ) * 100 > 100, 100,
+    ( sum(IF(type='connect',total,0)) / sum(IF(type='invite',total,0))    ) * 100
+  )
+)
+as total";
+			$layerHelper['group']['by'] = "from_ts, to_ts, ip_address";
+        }
+
+        $query = $layer->querySearchData($layerHelper);
+        $data = $db->loadObjectArray($query);
+
+        /* sorting */
+        //usort($data, create_function('$a, $b', 'return $a["micro_ts"] > $b["micro_ts"] ? 1 : -1;'));
+
+        $answer = array();
+
+        if(empty($data)) {
+
+                $answer['sid'] = session_id();
+                $answer['auth'] = 'true';
+                $answer['status'] = 200;
+                $answer['message'] = 'no data';
+                $answer['data'] = $data;
+                $answer['count'] = count($data);
+        }
+        else {
+                $answer['status'] = 200;
+                $answer['sid'] = session_id();
+                $answer['auth'] = 'true';
+                $answer['message'] = 'ok';
+                $answer['data'] = $data;
+                $answer['count'] = count($data);
+        }
+
+        return $answer;
+    }
+
+    public function getStatisticComponent($raw_get_data){
+
+        $timestamp = $raw_get_data['timestamp'];
+        $param = $raw_get_data['param'];
+        if(SYSLOG_ENABLE == 1) syslog(LOG_WARNING,"raw_get_data: " . $raw_get_data); ;
+        return $this->doStatisticComponent($timestamp, $param);
+    }
+
 
 
     public function getContainer($name)

@@ -102,6 +102,35 @@ INSERT INTO `node` (`id`, `host`, `dbname`, `dbport`, `dbusername`, `dbpassword`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dispatcher`
+--
+
+CREATE TABLE IF NOT EXISTS `dispatcher` (
+`id` int(10) unsigned NOT NULL,
+  `setid` int(11) NOT NULL DEFAULT '0',
+  `destination` varchar(192) NOT NULL DEFAULT '',
+  `flags` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `attrs` varchar(128) NOT NULL DEFAULT '',
+  `description` varchar(64) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `dispatcher_homer`
+--
+CREATE TABLE IF NOT EXISTS `dispatcher_homer` (
+`setid` int(5)
+,`destination` varchar(84)
+,`flags` int(1)
+,`priority` int(2)
+,`attrs` char(0)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `setting`
 --
 
@@ -202,3 +231,44 @@ CREATE TABLE IF NOT EXISTS `api_auth_key` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `authkey` (`authkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+--
+-- Table structure for table `version`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `table_name` varchar(32) NOT NULL,
+  `table_version` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `version`
+--
+
+INSERT INTO `version` (`table_name`, `table_version`) VALUES
+('version', 1),
+('dispatcher_homer', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `dispatcher_homer`
+--
+DROP TABLE IF EXISTS `dispatcher_homer`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `dispatcher_homer` AS select `alias`.`gid` AS `setid`,concat('sip:',`alias`.`ip`) AS `destination`,2 AS `flags`,10 AS `priority`,'' AS `attrs` from `alias`;
+
+--
+-- Indexes for table `dispatcher`
+--
+ALTER TABLE `dispatcher`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `version`
+--
+ALTER TABLE `version`
+ ADD UNIQUE KEY `table_name_idx` (`table_name`);
+
+

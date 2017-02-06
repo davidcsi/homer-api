@@ -324,3 +324,58 @@ CREATE TABLE IF NOT EXISTS `stats_generic` (
 /*!50100 PARTITION BY RANGE ( UNIX_TIMESTAMP(`from_date`))
 (PARTITION pmax VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */;
 
+--
+-- Table structure for table `stats_traffic`
+--
+
+CREATE TABLE IF NOT EXISTS `stats_traffic` (
+`id` bigint(20) unsigned NOT NULL,
+  `from_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `to_date` timestamp NOT NULL DEFAULT '1971-01-01 05:00:01',
+  `ip_address` varchar(50) NOT NULL DEFAULT '',
+  `type` varchar(50) NOT NULL DEFAULT '',
+  `total` int(20) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=237741 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8
+/*!50100 PARTITION BY RANGE ( UNIX_TIMESTAMP(`from_date`))
+(PARTITION pmax VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stats_traffic_mem`
+--
+
+CREATE TABLE IF NOT EXISTS `stats_traffic_mem` (
+  `id` bigint(20) unsigned NOT NULL,
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip_address` varchar(50) NOT NULL DEFAULT '',
+  `type` varchar(100) NOT NULL DEFAULT '',
+  `total` int(11) DEFAULT '0'
+) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `stats_traffic`
+--
+ALTER TABLE `stats_traffic`
+ ADD PRIMARY KEY (`id`,`from_date`), ADD UNIQUE KEY `dateiptype` (`from_date`,`to_date`,`ip_address`,`type`), ADD KEY `type` (`type`), ADD KEY `ip_address` (`ip_address`);
+
+--
+-- Indexes for table `stats_traffic_mem`
+--
+ALTER TABLE `stats_traffic_mem`
+ ADD UNIQUE KEY `ip_type` (`ip_address`,`type`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `stats_traffic`
+--
+ALTER TABLE `stats_traffic`
+MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+

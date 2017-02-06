@@ -27,7 +27,8 @@
 */
 
 
-define('ROOT', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
+#define('ROOT', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
+define('ROOT', '/root/homer/homer-ui/');
 define('_HOMEREXEC', "1");
 
 require_once("configuration.php");
@@ -106,6 +107,8 @@ Server::create(WEBROOT.'api/v1', 'RestApi\Auth') //base entry points `/admin`
       ->addGetRoute('useragent', 'getStatisticUserAgent') // => /api/session
       ->addPostRoute('destination', 'doStatisticDestination') // => /api/session
       ->addGetRoute('destination', 'getStatisticDestination') // => /api/session
+      ->addPostRoute('component', 'doStatisticComponent') // => /api/session
+      ->addGetRoute('component', 'getStatisticComponent') // => /api/session
     ->done()
 
     /* alarm */
