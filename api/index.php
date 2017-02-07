@@ -27,8 +27,8 @@
 */
 
 
-#define('ROOT', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
-define('ROOT', '/root/homer/homer-ui/');
+define('ROOT', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
+#define('ROOT', '/root/homer/homer-ui/');
 define('_HOMEREXEC', "1");
 
 require_once("configuration.php");
