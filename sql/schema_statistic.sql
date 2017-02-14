@@ -329,12 +329,13 @@ CREATE TABLE IF NOT EXISTS `stats_generic` (
 --
 
 CREATE TABLE IF NOT EXISTS `stats_traffic` (
-  `id` bigint(20) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `from_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `to_date` timestamp NOT NULL DEFAULT '1971-01-01 05:00:01',
   `ip_address` varchar(50) NOT NULL DEFAULT '',
   `type` varchar(50) NOT NULL DEFAULT '',
-  `total` int(20) NOT NULL DEFAULT '0'
+  `total` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`, `from_date`)
 ) ENGINE=InnoDB AUTO_INCREMENT=237741 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8
 /*!50100 PARTITION BY RANGE ( UNIX_TIMESTAMP(`from_date`))
 (PARTITION pmax VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */;
