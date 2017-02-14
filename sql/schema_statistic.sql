@@ -329,7 +329,7 @@ CREATE TABLE IF NOT EXISTS `stats_generic` (
 --
 
 CREATE TABLE IF NOT EXISTS `stats_traffic` (
-`id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `from_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `to_date` timestamp NOT NULL DEFAULT '1971-01-01 05:00:01',
   `ip_address` varchar(50) NOT NULL DEFAULT '',
@@ -346,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `stats_traffic` (
 --
 
 CREATE TABLE IF NOT EXISTS `stats_traffic_mem` (
-  `id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip_address` varchar(50) NOT NULL DEFAULT '',
   `type` varchar(100) NOT NULL DEFAULT '',
@@ -361,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `stats_traffic_mem` (
 -- Indexes for table `stats_traffic`
 --
 ALTER TABLE `stats_traffic`
- ADD PRIMARY KEY (`id`,`from_date`), ADD UNIQUE KEY `dateiptype` (`from_date`,`to_date`,`ip_address`,`type`), ADD KEY `type` (`type`), ADD KEY `ip_address` (`ip_address`);
+ ADD UNIQUE KEY `dateiptype` (`from_date`,`to_date`,`ip_address`,`type`), ADD KEY `type` (`type`), ADD KEY `ip_address` (`ip_address`);
 
 --
 -- Indexes for table `stats_traffic_mem`
@@ -372,10 +372,4 @@ ALTER TABLE `stats_traffic_mem`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `stats_traffic`
---
-ALTER TABLE `stats_traffic`
-MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 
