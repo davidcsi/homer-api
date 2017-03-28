@@ -353,7 +353,7 @@ CREATE TABLE `stats_asracd_mem` (
 --
 
 DROP TABLE IF EXISTS `stats_asracd`;
-CREATE TABLE `stats_asracd4` (
+CREATE TABLE `stats_asracd` (
   `from_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `to_date` timestamp NULL DEFAULT NULL,
   `src_ip` varchar(50) DEFAULT NULL,
