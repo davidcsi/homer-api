@@ -218,19 +218,19 @@ CREATE TABLE `version` (
 -- Dumping data for table `version`
 --
 
-INSERT INTO `version` VALUES ('version',1),('address',6),('trusted',6)
+INSERT INTO `version` VALUES ('version',1),('address',6),('trusted',6),('permissions',6)
 
 -- Create view got dispatcher_homer
 
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `dispatcher_homer` AS
-    Select 
+    Select
         `alias`.`id` AS `id`,
         `alias`.`ip` AS `src_ip`,
         'any' AS `proto`,
         '' AS `from_pattern`,
         '' AS `ruri_pattern`,
         `alias`.`alias` AS `tag`,
-        10 AS `priority` 
+        10 AS `priority`
     from `alias`;
 
 CREATE TABLE `address` (
