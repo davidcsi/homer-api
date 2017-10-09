@@ -218,7 +218,7 @@ CREATE TABLE `version` (
 -- Dumping data for table `version`
 --
 
-INSERT INTO `version` VALUES ('version',1),('address',6),('trusted',6),('permissions',6)
+INSERT INTO `version` VALUES ('version',1);
 
 -- Create view got dispatcher_homer
 
@@ -243,4 +243,16 @@ CREATE TABLE `address` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
+INSERT INTO version (table_name, table_version) values ('address','6');
 
+CREATE TABLE `trusted` (
+    `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `src_ip` VARCHAR(50) NOT NULL,
+    `proto` VARCHAR(4) NOT NULL,
+    `from_pattern` VARCHAR(64) DEFAULT NULL,
+    `ruri_pattern` VARCHAR(64) DEFAULT NULL,
+    `tag` VARCHAR(64),
+    `priority` INT DEFAULT 0 NOT NULL
+);
+
+INSERT INTO version (table_name, table_version) values ('trusted','6');
