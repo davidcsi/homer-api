@@ -222,7 +222,7 @@ INSERT INTO `version` VALUES ('version',1);
 
 -- Create view got dispatcher_homer
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `dispatcher_homer` AS
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `trusted_homer` AS
     Select
         `alias`.`id` AS `id`,
         `alias`.`ip` AS `src_ip`,
@@ -232,6 +232,8 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `dispatcher_homer` AS
         `alias`.`alias` AS `tag`,
         10 AS `priority`
     from `alias`;
+
+INSERT INTO version (table_name, table_version) values ('trusted_homer','6');
 
 CREATE TABLE `address` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -245,14 +247,3 @@ CREATE TABLE `address` (
 
 INSERT INTO version (table_name, table_version) values ('address','6');
 
-CREATE TABLE `trusted` (
-    `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `src_ip` VARCHAR(50) NOT NULL,
-    `proto` VARCHAR(4) NOT NULL,
-    `from_pattern` VARCHAR(64) DEFAULT NULL,
-    `ruri_pattern` VARCHAR(64) DEFAULT NULL,
-    `tag` VARCHAR(64),
-    `priority` INT DEFAULT 0 NOT NULL
-);
-
-INSERT INTO version (table_name, table_version) values ('trusted','6');
